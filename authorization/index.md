@@ -234,6 +234,11 @@ in the clear.
 * Apps should persist tokens and other sensitive data in app-specific
 storage locations only, not in system-wide-discoverable locations.
 
+* An app must validate the the signature of the Open ID Connect ID Token 
+according to the algorithm defined in the JWS _alg_ header. In the case 
+where the JWS _alg_ is "none", the app must reject any claims where the 
+issuer is different from the url of the authorization server. 
+
 #### *SMART authorization sequence* 
 
 <img class="sequence-diagram-raw" src="http://www.websequencediagrams.com/cgi-bin/cdraw?lz=bm90ZSBsZWZ0IG9mIEFwcDogUmVxdWVzdCBhdXRob3JpemF0aW9uCkFwcCAtPj4gRUhSIEF1dGh6IFNlcnZlcjogUmVkaXJlY3QgaHR0cHM6Ly97ZWhyADUJZV91cmx9Py4uLgoAZgVvdmVyADITQQAnCCBBcHBcbihtYXkgaW5jbHVkZSBlbmQtdXNlAE4GZW50aWMAgQ4FXG5hbmQADw4AgSYJKQpOb3RlIABWGE9uIGFwcHJvdmFsCgCBQRAgLT4-AIIBBwCBSBBhcHAgcgCBZwdfdXJpfT9jb2RlPTEyMyYAgVcJAII-DUV4Y2hhbmdlIGNvZGUgZm9yIGFjY2VzcyB0b2tlbjtcbmlmIGNvbmZpZGVudGlhbCBjbGllbnQsAIFyCXNlY3JldApBcHAtPgCCaBJQT1NUAIJsCgBPBSB1cmx9XG5ncmFudF90eXBlPQCDOg1fY29kZSYAgSQSAIJ7GwCCagdlIGEAgxQFAIEcFgCCaQcAg0YXSXNzdWUgbmV3AIFyBiB3aXRoIGNvbnRleHQ6XG4ge1xuIgCCEwZfAIIUBSI6IgCBcwYtAIIjBS14eXoiLFxuImV4cGlyZXMtaW4iOjM2MDAsXG4icGF0aWVudCI6IjQ1NiIsXG4uLi5cbn0Ag0MUAIVZBVsAgnYMIHJlc3BvbnNlXQ&s=default&h=NA3OIkJNCqFraI5a">
@@ -509,7 +514,7 @@ includes the following parameters:
     <tr>
       <td><code>id_token</code></td>
       <td><span class="label label-info">optional</span></td>
-      <td>Authenticated patient identity and profile, if requested</td>
+      <td>Authenticated patient identity and fhirUser profile, if requested</td>
     </tr>
       <tr>
       <td><code>refresh_token</code></td>
@@ -567,6 +572,10 @@ guess.  Using a reference may require an extra interaction between the
 resource server and the authorization server; the mechanics of such an 
 interaction are not defined by this specification. 
 
+If the app is granted the `id_token` scope, it validates the signature 
+of the ID Token JWT according to the JWS algorithm. In the case where 
+the JWS alg is _none_, the app must reject any claims where the issuer 
+is different from the url of the authorization server. 
 
 #### *For example*
 <a id="step-4"></a>
@@ -599,6 +608,7 @@ redirect_uri=https%3A%2F%2Fapp%2Fafter-auth
   "intent": "client-ui-name",
   "patient":  "123",
   "encounter": "456"
+  "id_token": "eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJpc3MiOiJodHRwczovL29wZW4taWMuZXBpYy5jb20vRkhJUi0yMDE2LVNlY3VyZS9hcGkvRkhJUi9EU1RVMi9tZXRhZGF0YSIsInN1YiI6ImlzYWFjIiwiYXVkIjoiYXBwLWNsaWVudC1pZCIsImV4cCI6MTMxMTI4MTk3MCwiaWF0IjoxMzExMjgwOTcwLCJqdGkiOiJyYW5kb20tbm9uLXJldXNhYmxlLWp3dC1pZC0xMjMifQ.eI7FYgzzzrWtlGfVksDNVI-TsGSjsiBWeRwDUaytjIE"
 }
 ```
 

@@ -45,9 +45,12 @@ need -- including access to clinical data and context like:
 <h3 id="openid">Simple sign-in:  <b>OpenID Connect</b></h3>
 
 If your app needs to authenticate the EHR end-user, OpenID Connect is there to
-help. Just ask for one additional scope (`openid`) when you request
-authorization, and you'll have access to a `UserInfo` endpoint that exposes
-structure claims about the user, including name and NPI.
+help. Just ask for an additional scope (`openid`) when you request
+authorization, and the OAuth2 server will provide an 
+[`id_token`](http://openid.net/specs/openid-connect-core-1_0.html#IDToken) JWT containing 
+claims about the user, including a unique identifier. Additionally, ask for the 
+`profile` scope to receive a url to the FHIR resource that represents the current user 
+(e.g. Patient, Practitioner, Person).
 
 <h3 id="html">Lightweight UI integration:  <b>HTML5</b></h3>
 
@@ -56,6 +59,8 @@ web apps to run inside browser widgets or inline frames, so users can interact
 without leaving the EHR environment. Of course, native and mobile apps are
 supported too -- so you can choose the level of integration that makes sense
 for you.
+
+
 {% raw %}
 <!--
 <example>
